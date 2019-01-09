@@ -1,9 +1,8 @@
+# load libraries
 
 if(!require("strviewr")) {
   if(!is.element("devtools", installed.packages()[,1])) {install.packages("devtools")} 
-  library(devtools)
-  
-  install_github("jiristipl/strviewr")
+  devtools::install_github("jiristipl/strviewr")
 }
 
 library(tidyverse)
@@ -14,39 +13,41 @@ library(stringr)
 source("R/private_functions.R")
 key <- get_key()
 
+# create directories
+
 places_dir <- here::here("streetview","places")
 if(!dir.exists(places_dir)) {
   dir.create(places_dir, recursive = T)
 }
-
 
 test_places_dir <- here::here("streetview","places", "example")
 if(!dir.exists(test_places_dir)) {
   dir.create(test_places_dir, recursive = T)
 }
 
+# just test one example
 
-download_place(loc=c(50.089360, 14.415233),place_code=1, step=35, key=key, folder = test_places_dir)
+download_place(loc=c(50.089360, 14.415233), place_code=1, step=35, key=key, folder = test_places_dir)
 
-# now whole directory
 
+# now download whole directory
+
+## load coordinates
 placestrack_file <- here::here("data", "placestracks_locations.xlsx")
-
 df <- readxl::read_excel(placestrack_file, "places")
 
+# 
 df2 <- df %>%
   rowwise() %>% 
   mutate(lat = link %>% 
-           str_replace(".*@(.*)/.*", "\\1") %>% 
-           str_split(",",simplify = T) %>% 
-           .[1] %>% as.numeric(),
+           str_replace(".*!3d(.*)!.*", "\\1") %>% 
+           as.numeric(),
          long = link %>% 
-           str_replace(".*@(.*)/.*", "\\1") %>% 
-           str_split(",",simplify = T) %>% 
-           .[2] %>% as.numeric()) %>% 
+           str_replace(".*!4d(.*)$", "\\1") %>% 
+           as.numeric()) %>% 
   ungroup() 
 
-tm <- FDhelpers::create.time.measure(nrow(df2))
+
 for (i in 1:nrow(df2)) {
   f_pth <- file.path(places_dir, df2$pid[i])
 
@@ -59,7 +60,5 @@ for (i in 1:nrow(df2)) {
                  step=35,
                  key=key,
                  folder = f_pth)
-  tm <- FDhelpers::update.tm(tm) 
-  FDhelpers::print.tm(tm)
 }
 
