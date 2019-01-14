@@ -36,7 +36,7 @@ download_place(loc=c(50.089360, 14.415233), place_code=1, step=35, key=key, fold
 placestrack_file <- here::here("data", "placestracks_locations.xlsx")
 df <- readxl::read_excel(placestrack_file, "places")
 
-# 
+# extract coordiantes
 df2 <- df %>%
   rowwise() %>% 
   mutate(lat = link %>% 
@@ -47,6 +47,7 @@ df2 <- df %>%
            as.numeric()) %>% 
   ungroup() 
 
+#save each coordinate into directory
 
 for (i in 1:nrow(df2)) {
   f_pth <- file.path(places_dir, df2$pid[i])
