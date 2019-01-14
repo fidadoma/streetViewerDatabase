@@ -67,7 +67,7 @@ for (i in 1:nrow(df2)) {
   download_track(start=c(df2$lat_start[i], df2$long_start[i]), 
                  end=c(df2$lat_end[i], df2$long_end[i]), 
                  track_code=df2$tid[i],
-                 pace=30,
+                 pace=20,
                  key=key,
                  folder = f_pth)
   
