@@ -41,7 +41,7 @@ if(!dir.exists(outdir_thumbnails_tracks)) {
   dir.create(outdir_thumbnails_tracks, recursive = T)
 }
 
-num_tracks <- 20
+num_tracks <- 10
 num_total <- 120
 
 tracks_processed <- 0
@@ -52,8 +52,8 @@ dirs <- file.path(tracks_dir,paste0("T",str_pad(as.character(1:num_total),3, pad
 for(i in 1:length(dirs)){
   fs <- dir(dirs[i],full.names = T)
   fs <- fs %>% str_subset("_0_")
-  if(length(fs) >= 5 & tracks_processed < num_tracks) {
-    for(j in 1:5) {
+  if(length(fs) >= 10 & tracks_processed < num_tracks) {
+    for(j in 1:10) {
       image_read(fs[j]) %>% 
         image_scale("x80") %>% 
         image_write(file.path(outdir_thumbnails_tracks, basename(fs[j])))

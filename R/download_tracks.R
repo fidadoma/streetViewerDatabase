@@ -9,9 +9,8 @@ library(tidyverse)
 library(strviewr)
 library(stringr)
 
-# following two lines should be changed to individual API key
-source("R/private_functions.R")
-key <- get_key()
+# fill in your API key
+key <- "your key goes here"
 
 # create directories
 
@@ -57,7 +56,7 @@ df2 <- df %>%
            as.numeric()) %>% 
   ungroup() 
 
-for (i in 1:nrow(df2)) {
+for (i in 48:nrow(df2)) {
   f_pth <- file.path(tracks_dir, df2$tid[i])
   
   if(!dir.exists(f_pth)) {
@@ -67,7 +66,7 @@ for (i in 1:nrow(df2)) {
   download_track(start=c(df2$lat_start[i], df2$long_start[i]), 
                  end=c(df2$lat_end[i], df2$long_end[i]), 
                  track_code=df2$tid[i],
-                 pace=20,
+                 pace=15,
                  key=key,
                  folder = f_pth)
   
